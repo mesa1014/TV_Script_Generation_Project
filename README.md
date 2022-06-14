@@ -5,8 +5,8 @@ In this project, you'll generate your own [Seinfeld](https://en.wikipedia.org/wi
 
 ## Get the Data
 
-The data is already provided for you in `./data/Seinfeld_Scripts.txt` and you're encouraged to open that file and look at the text. 
->* As a first step, we'll load in this data and look at some samples. 
+The data is already provided for you in `./data/Seinfeld_Scripts.txt` and you're encouraged to open that file and look at the text.
+>* As a first step, we'll load in this data and look at some samples.
 * Then, you'll be tasked with defining and training an RNN to generate a new script!
 
 
@@ -49,18 +49,18 @@ print('\n'.join(text.split('\n')[view_line_range[0]:view_line_range[1]]))
     Roughly the number of unique words: 46367
     Number of lines: 109233
     Average number of words in each line: 5.544240293684143
-    
+
     The lines 0 to 10:
-    jerry: do you know what this is all about? do you know, why were here? to be out, this is out...and out is one of the single most enjoyable experiences of life. people...did you ever hear people talking about we should go out? this is what theyre talking about...this whole thing, were all out now, no one is home. not one person here is home, were all out! there are people trying to find us, they dont know where we are. (on an imaginary phone) did you ring?, i cant find him. where did he go? he didnt tell me where he was going. he must have gone out. you wanna go out you get ready, you pick out the clothes, right? you take the shower, you get all ready, get the cash, get your friends, the car, the spot, the reservation...then youre standing around, what do you do? you go we gotta be getting back. once youre out, you wanna get back! you wanna go to sleep, you wanna get up, you wanna go out again tomorrow, right? where ever you are in life, its my feeling, youve gotta go. 
-    
-    jerry: (pointing at georges shirt) see, to me, that button is in the worst possible spot. the second button literally makes or breaks the shirt, look at it. its too high! its in no-mans-land. you look like you live with your mother. 
-    
-    george: are you through? 
-    
-    jerry: you do of course try on, when you buy? 
-    
-    george: yes, it was purple, i liked it, i dont actually recall considering the buttons. 
-    
+    jerry: do you know what this is all about? do you know, why were here? to be out, this is out...and out is one of the single most enjoyable experiences of life. people...did you ever hear people talking about we should go out? this is what theyre talking about...this whole thing, were all out now, no one is home. not one person here is home, were all out! there are people trying to find us, they dont know where we are. (on an imaginary phone) did you ring?, i cant find him. where did he go? he didnt tell me where he was going. he must have gone out. you wanna go out you get ready, you pick out the clothes, right? you take the shower, you get all ready, get the cash, get your friends, the car, the spot, the reservation...then youre standing around, what do you do? you go we gotta be getting back. once youre out, you wanna get back! you wanna go to sleep, you wanna get up, you wanna go out again tomorrow, right? where ever you are in life, its my feeling, youve gotta go.
+
+    jerry: (pointing at georges shirt) see, to me, that button is in the worst possible spot. the second button literally makes or breaks the shirt, look at it. its too high! its in no-mans-land. you look like you live with your mother.
+
+    george: are you through?
+
+    jerry: you do of course try on, when you buy?
+
+    george: yes, it was purple, i liked it, i dont actually recall considering the buttons.
+
 
 
 ---
@@ -94,7 +94,7 @@ def create_lookup_tables(text):
     # create int_to_vocab dictionaries
     int_to_vocab = {ii: word for ii, word in enumerate(sorted_vocab)}
     vocab_to_int = {word: ii for ii, word in int_to_vocab.items()}
-    
+
     # return tuple
     return (vocab_to_int, int_to_vocab)
 
@@ -208,7 +208,7 @@ Let's start with the preprocessed input data. We'll use [TensorDataset](http://p
 You can create data with TensorDataset by passing in feature and target tensors. Then create a DataLoader as usual.
 ```
 data = TensorDataset(feature_tensors, target_tensors)
-data_loader = torch.utils.data.DataLoader(data, 
+data_loader = torch.utils.data.DataLoader(data,
                                           batch_size=batch_size)
 ```
 
@@ -251,10 +251,10 @@ def batch_data(words, sequence_length, batch_size):
     :return: DataLoader with batched data
     """
     # TODO: Implement function
-    
+
     # total number of batches
     total_batch = len(words)-sequence_length
-    
+
     # initiate x and y as np array with zero elements
     x = np.zeros((total_batch, sequence_length), dtype=int)
     y = np.zeros(total_batch, dtype=int)
@@ -265,7 +265,7 @@ def batch_data(words, sequence_length, batch_size):
         x[ii] = words[ii:ii+sequence_length]
         # targets
         y[ii] = words[ii+sequence_length]
-    
+
     # convert to tensors
     feature_tensors, target_tensors=torch.from_numpy(x), torch.from_numpy(y)
     # tensor datasets
@@ -305,7 +305,7 @@ iter(test_generator).next()
 
 
 
-### Test your dataloader 
+### Test your dataloader
 
 You'll have to modify this code to test a batching function, but it should look fairly similar.
 
@@ -331,7 +331,7 @@ tensor([ 33,  26,  22,  39,  16,  28,  11,  43,  30,  12])
 ```
 
 ### Sizes
-Your sample_x should be of size `(batch_size, sequence_length)` or (10, 5) in this case and sample_y should just have one dimension: batch_size (10). 
+Your sample_x should be of size `(batch_size, sequence_length)` or (10, 5) in this case and sample_y should just have one dimension: batch_size (10).
 
 ### Values
 
@@ -365,7 +365,7 @@ print(sample_y)
             [  2,   3,   4,   5,   6],
             [ 11,  12,  13,  14,  15],
             [  1,   2,   3,   4,   5]])
-    
+
     torch.Size([10])
     tensor([ 34,  45,  12,  40,  43,  11,  27,   7,  16,   6])
 
@@ -373,10 +373,10 @@ print(sample_y)
 ---
 ## Build the Neural Network
 Implement an RNN using PyTorch's [Module class](http://pytorch.org/docs/master/nn.html#torch.nn.Module). You may choose to use a GRU or an LSTM. To complete the RNN, you'll have to implement the following functions for the class:
- - `__init__` - The initialize function. 
+ - `__init__` - The initialize function.
  - `init_hidden` - The initialization function for an LSTM/GRU hidden state
  - `forward` - Forward propagation function.
- 
+
 The initialize function should create the layers of the neural network and save them to the class. The forward propagation function will use these layers to run forward propagation and generate an output and a hidden state.
 
 **The output of this model should be the *last* batch of word scores** after a complete sequence has been processed. That is, for each input sequence of words, we only want to output the word scores for a single, most likely, next word.
@@ -398,7 +398,7 @@ out = output[:, -1]
 import torch.nn as nn
 
 class RNN(nn.Module):
-    
+
     def __init__(self, vocab_size, output_size, embedding_dim, hidden_dim, n_layers, dropout=0.5):
         """
         Initialize the PyTorch RNN Module
@@ -410,22 +410,22 @@ class RNN(nn.Module):
         """
         super(RNN, self).__init__()
         # TODO: Implement function
-        
+
         # set class variables
         self.output_size = output_size
         self.n_layers = n_layers
         self.hidden_dim = hidden_dim
-        
+
         # define model layers
         # embedding and LSTM layers
         self.embedding = nn.Embedding(vocab_size, embedding_dim)
-        self.lstm = nn.LSTM(embedding_dim, hidden_dim, n_layers, 
+        self.lstm = nn.LSTM(embedding_dim, hidden_dim, n_layers,
                             dropout=dropout, batch_first=True)
-        
+
         # linear layer
         self.fc = nn.Linear(hidden_dim, output_size)
-        
-    
+
+
     def forward(self, nn_input, hidden):
         """
         Forward propagation of the neural network
@@ -440,16 +440,16 @@ class RNN(nn.Module):
         embeds = self.embedding(nn_input)
         lstm_out, hidden = self.lstm(embeds, hidden)
         lstm_out = lstm_out.contiguous().view(-1, self.hidden_dim)
-        
+
         # fully-connected layer
         out = self.fc(lstm_out)
         out = out.view(batch_size, -1, self.output_size)
-        out = out[:, -1] 
+        out = out[:, -1]
 
         # return one batch of output word scores and the hidden state
         return out, hidden
-    
-    
+
+
     def init_hidden(self, batch_size):
         '''
         Initialize the hidden state of an LSTM/GRU
@@ -465,7 +465,7 @@ class RNN(nn.Module):
         else:
             hidden = (weight.new(self.n_layers, batch_size, self.hidden_dim).zero_(),
                       weight.new(self.n_layers, batch_size, self.hidden_dim).zero_())
-        
+
         return hidden
 
 """
@@ -500,9 +500,9 @@ def forward_back_prop(rnn, optimizer, criterion, inp, target, hidden):
     :param target: The target output for the batch of input
     :return: The loss and the latest hidden state Tensor
     """
-    
+
     # TODO: Implement Function
-    
+
     # move data to GPU, if available
     # initialize hidden state
     if(train_on_gpu):
@@ -555,22 +555,22 @@ DON'T MODIFY ANYTHING IN THIS CELL
 
 def train_rnn(rnn, batch_size, optimizer, criterion, n_epochs, show_every_n_batches=100):
     batch_losses = []
-    
+
     rnn.train()
 
     print("Training for %d epoch(s)..." % n_epochs)
     for epoch_i in range(1, n_epochs + 1):
-        
+
         # initialize hidden state
         hidden = rnn.init_hidden(batch_size)
-        
+
         for batch_i, (inputs, labels) in enumerate(train_loader, 1):
-            
+
             # make sure you iterate over completely full batches, only
             n_batches = len(train_loader.dataset)//batch_size
             if(batch_i > n_batches):
                 break
-            
+
             # forward, back prop
             loss, hidden = forward_back_prop(rnn, optimizer, criterion, inputs, labels, hidden)          
             # record loss
@@ -639,8 +639,8 @@ show_every_n_batches = 500
 ```
 
 ### Train
-In the next cell, you'll train the neural network on the pre-processed data.  If you have a hard time getting a good loss, you may consider changing your hyperparameters. In general, you may get better results with larger hidden and n_layer dimensions, but larger models take a longer time to train. 
-> **You should aim for a loss less than 3.5.** 
+In the next cell, you'll train the neural network on the pre-processed data.  If you have a hard time getting a good loss, you may consider changing your hyperparameters. In general, you may get better results with larger hidden and n_layer dimensions, but larger models take a longer time to train.
+> **You should aim for a loss less than 3.5.**
 
 You should also experiment with different sequence lengths, which determine the size of the long range dependencies that a model can learn.
 
@@ -669,89 +669,89 @@ print('Model Trained and Saved')
 
     Training for 7 epoch(s)...
     Epoch:    1/7     Loss: 5.411805508613586
-    
+
     Epoch:    1/7     Loss: 4.709791937828064
-    
+
     Epoch:    1/7     Loss: 4.492353605747223
-    
+
     Epoch:    1/7     Loss: 4.371264899253846
-    
+
     Epoch:    1/7     Loss: 4.3010984773635865
-    
+
     Epoch:    1/7     Loss: 4.2241617126464845
-    
+
     Epoch:    2/7     Loss: 4.093536486955193
-    
+
     Epoch:    2/7     Loss: 4.001882740974426
-    
+
     Epoch:    2/7     Loss: 3.991471710205078
-    
+
     Epoch:    2/7     Loss: 3.9623905363082885
-    
+
     Epoch:    2/7     Loss: 3.943414158821106
-    
+
     Epoch:    2/7     Loss: 3.9307433743476867
-    
+
     Epoch:    3/7     Loss: 3.8624786160341125
-    
+
     Epoch:    3/7     Loss: 3.7714739303588867
-    
+
     Epoch:    3/7     Loss: 3.770727074623108
-    
+
     Epoch:    3/7     Loss: 3.7689514212608337
-    
+
     Epoch:    3/7     Loss: 3.7644625244140624
-    
+
     Epoch:    3/7     Loss: 3.7579083914756777
-    
+
     Epoch:    4/7     Loss: 3.701879515153606
-    
+
     Epoch:    4/7     Loss: 3.624343780040741
-    
+
     Epoch:    4/7     Loss: 3.6259101281166077
-    
+
     Epoch:    4/7     Loss: 3.6396508135795593
-    
+
     Epoch:    4/7     Loss: 3.648794955253601
-    
+
     Epoch:    4/7     Loss: 3.65038586807251
-    
+
     Epoch:    5/7     Loss: 3.593461297634171
-    
+
     Epoch:    5/7     Loss: 3.5286277952194216
-    
+
     Epoch:    5/7     Loss: 3.5326977586746215
-    
+
     Epoch:    5/7     Loss: 3.5419077925682068
-    
+
     Epoch:    5/7     Loss: 3.5543718099594117
-    
+
     Epoch:    5/7     Loss: 3.5456391735076904
-    
+
     Epoch:    6/7     Loss: 3.48487312934263
-    
+
     Epoch:    6/7     Loss: 3.4301136283874514
-    
+
     Epoch:    6/7     Loss: 3.46261252450943
-    
+
     Epoch:    6/7     Loss: 3.45461363363266
-    
+
     Epoch:    6/7     Loss: 3.4721363077163696
-    
+
     Epoch:    6/7     Loss: 3.483039553165436
-    
+
     Epoch:    7/7     Loss: 3.4172669246913943
-    
+
     Epoch:    7/7     Loss: 3.3792250151634216
-    
+
     Epoch:    7/7     Loss: 3.3838290948867797
-    
+
     Epoch:    7/7     Loss: 3.386290988922119
-    
+
     Epoch:    7/7     Loss: 3.407457652568817
-    
+
     Epoch:    7/7     Loss: 3.408659592151642
-    
+
     Model Trained and Saved
 
 
@@ -759,7 +759,7 @@ print('Model Trained and Saved')
       "type " + obj.__name__ + ". It won't be checked "
 
 
-### Question: How did you decide on your model hyperparameters? 
+### Question: How did you decide on your model hyperparameters?
 For example, did you try different sequence_lengths and find that one size made the model converge faster? What about your hidden_dim and n_layers; how did you decide on those?
 
 **Answer:** (Write answer, here)
@@ -770,7 +770,7 @@ sequence_length = 20
 
 batch_size = 256
 
-num_epochs = 7 
+num_epochs = 7
 
 learning_rate = 0.001
 
@@ -825,55 +825,55 @@ def generate(rnn, prime_id, int_to_vocab, token_dict, pad_value, predict_len=100
     :return: The generated text
     """
     rnn.eval()
-    
+
     # create a sequence (batch_size=1) with the prime_id
     current_seq = np.full((1, sequence_length), pad_value)
     current_seq[-1][-1] = prime_id
     predicted = [int_to_vocab[prime_id]]
-    
+
     for _ in range(predict_len):
         if train_on_gpu:
             current_seq = torch.LongTensor(current_seq).cuda()
         else:
             current_seq = torch.LongTensor(current_seq)
-        
+
         # initialize the hidden state
         hidden = rnn.init_hidden(current_seq.size(0))
-        
+
         # get the output of the rnn
         output, _ = rnn(current_seq, hidden)
-        
+
         # get the next word probabilities
         p = F.softmax(output, dim=1).data
         if(train_on_gpu):
             p = p.cpu() # move to cpu
-         
+
         # use top_k sampling to get the index of the next word
         top_k = 5
         p, top_i = p.topk(top_k)
         top_i = top_i.numpy().squeeze()
-        
+
         # select the likely next word index with some element of randomness
         p = p.numpy().squeeze()
         word_i = np.random.choice(top_i, p=p/p.sum())
-        
+
         # retrieve that word from the dictionary
         word = int_to_vocab[word_i]
         predicted.append(word)     
-        
+
         # the generated word becomes the next "current sequence" and the cycle can continue
         current_seq = np.roll(current_seq, -1, 1)
         current_seq[-1][-1] = word_i
-    
+
     gen_sentences = ' '.join(predicted)
-    
+
     # Replace punctuation tokens
     for key, token in token_dict.items():
         ending = ' ' if key in ['\n', '(', '"'] else ''
         gen_sentences = gen_sentences.replace(' ' + token.lower(), key)
     gen_sentences = gen_sentences.replace('\n ', '\n')
     gen_sentences = gen_sentences.replace('( ', '(')
-    
+
     # return all the sentences
     return gen_sentences
 ```
@@ -905,57 +905,57 @@ print(generated_script)
 
 
     jerry: jerry is jerry) you know, it's not a lot of pressure, i don't know what happened.
-    
+
     george: you know, i was thinking.
-    
+
     elaine:(to kramer) you can't take it!
-    
+
     george: i think i'm not gonna get it. i can't get the bathroom.
-    
+
     george:(still laughing) i don't know.
-    
+
     jerry:(to george) hey.
-    
+
     elaine:(to elaine) you know what?
-    
+
     george:(to elaine) hey, hey!
-    
+
     jerry: hey, how do we do it?
-    
+
     kramer: no, no no, i don't know.
-    
+
     kramer:(quietly) hey, i know...
-    
+
     jerry: so you know, i don't know, you don't have to do it.
-    
+
     elaine:(to jerry) hey buddy.
-    
+
     kramer: hey!
-    
+
     jerry: hi.
-    
+
     jerry: hey, you know, i don't know....
-    
+
     jerry:(to elaine) you know, i was wondering if i don't want you to know, but you don't think i was going to get a job.
-    
+
     elaine:(to the intercom) i can't believe that.(elaine looks at the other side of the couch)
-    
+
     kramer: hey, hey, you know, i don't think i was going in a lot for a few days.
-    
+
     jerry: oh yeah, i think i'm not gonna do that.
-    
+
     elaine:(to jerry) i can't.
-    
+
     kramer:(to george) i don't know.
-    
+
     elaine: i know, it's not a lot of people...
-    
+
     elaine:(to george) oh, i don't think that's a great name, but i'm not gonna be the best.
-    
+
     kramer: well, i'm sure you were going to be honest with this. i was in the middle of the room, you know what? you don't think so?
-    
+
     george: i can't believe it, but you don't have a problem with you.
-    
+
     elaine:
 
 
@@ -996,10 +996,7 @@ It's ok if the TV script doesn't make perfect sense. It should look like alterna
 >
 >kramer:(laughing) you know...(to jerry) you don't know.
 
-You can see that there are multiple characters that say (somewhat) complete sentences, but it doesn't have to be perfect! It takes quite a while to get good results, and often, you'll have to use a smaller vocabulary (and discard uncommon words), or get more data.  The Seinfeld dataset is about 3.4 MB, which is big enough for our purposes; for script generation you'll want more than 1 MB of text, generally. 
-
-# Submitting This Project
-When submitting this project, make sure to run all the cells before saving the notebook. Save the notebook file as "dlnd_tv_script_generation.ipynb" and save another copy as an HTML file by clicking "File" -> "Download as.."->"html". Include the "helper.py" and "problem_unittests.py" files in your submission. Once you download these files, compress them into one zip file for submission.
+You can see that there are multiple characters that say (somewhat) complete sentences, but it doesn't have to be perfect! It takes quite a while to get good results, and often, you'll have to use a smaller vocabulary (and discard uncommon words), or get more data.  The Seinfeld dataset is about 3.4 MB, which is big enough for our purposes; for script generation you'll want more than 1 MB of text, generally.
 
 
 ```python
